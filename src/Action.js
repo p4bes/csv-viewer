@@ -1,6 +1,7 @@
 const Pagination = require('./Pagination');
 
 exports.handleAction = function (key, keytoActionMap, size, originalSize, offset, totalElements, updateCallback) {
+    key.toLowerCase();
     if (keytoActionMap.hasOwnProperty(key)) {
         const action = keytoActionMap[key];
         let pagination = new Pagination(offset, size, totalElements, originalSize);
