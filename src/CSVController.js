@@ -7,25 +7,30 @@ const actionController = require('./Action')
 const KEY_TO_ACTION = require('./KeyToAction');
 
 
-exports.start = function () {
+exports.startWithoutConsole = function (filePath, pageSize, dontCloseForTest) {
+    _start(filePath, pageSize, dontCloseForTest);
+};
+
+exports.startConsole = function (dontCloseForTest) {
+    const filePath = consoleProcess.getParamFromPosition(2);
+    const pageSize = parseInt(consoleProcess.getParamFromPosition(3));
+    _start(filePath, pageSize, dontCloseForTest);
+};
+
+function _start(filePath, pageSize, dontCloseForTest) {
     let offset = 0;
-    let size = 10;
+    let size = pageSize | 10;
+    let originalSize = size;
     let data;
     let csvContent;
 
-    const filePath = consoleProcess.getParamFromPosition(2);
-    const paramSize = parseInt(consoleProcess.getParamFromPosition(3));
-    if (paramSize) {
-        size = paramSize;
-    }
-    let originalSize = size;
     if (filePath != null) {
         // 1. read File
         try {
             csvContent = fileReader.readFile(filePath);
         } catch (e) {
             consoleUI.printText('Error while reading file! Exiting...');
-            exit();
+            _exit();
         }
 
         // 2. transform the data
@@ -33,7 +38,7 @@ exports.start = function () {
             data = csvTransformator.csvToJS(csvContent);
         } else {
             consoleUI.printText('File has invalid (= no csv) content! Exiting...');
-            exit();
+            _exit();
         }
 
         // 3. print data to the UI
@@ -41,7 +46,7 @@ exports.start = function () {
             consoleUI.printTable(data, KEY_TO_ACTION.keytoActionMap, offset, size);
         } else {
             consoleUI.printText('File contains no data! Exiting...');
-            exit();
+            _exit();
         }
 
         // 4. wait for interactions
@@ -54,19 +59,22 @@ exports.start = function () {
                     size = newSize;
                     consoleUI.printTable(data, KEY_TO_ACTION.keytoActionMap, offset, size);
                 } else if (action && action === 'EXIT') {
-                    exit();
+                    _exit();
                 }
             });
         });
 
     } else {
         consoleUI.printText('No filepath passed as first parameter! Exiting...');
-        exit();
+        _exit();
     }
-};
 
-function exit() {
-    consoleUI.close();
-    consoleProcess.exit();
+    function _exit() {
+        if (!dontCloseForTest) {
+            consoleUI.close();
+            consoleProcess.exit();
+        }
+    }
 }
+
 

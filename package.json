@@ -7,7 +7,7 @@
     "start": "node index.js",
     "debug": "node $NODE_DEBUG_OPTION index.js",
     "csvviewer": "npm run start",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "keywords": [
     "csv",
@@ -16,7 +16,9 @@
   ],
   "author": "Johannes Tischer, Pablo Thomas",
   "license": "ISC",
-  "dependencies": {
-    "chai": "^4.2.0"
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha-sinon": "^2.1.0",
+    "sinon": "^7.2.3"
   }
 }
