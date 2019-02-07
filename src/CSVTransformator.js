@@ -1,5 +1,5 @@
 const CSV_COLUMN_SPLIT_CHARACTER = ';';
-const CSV_NEWLINE_SPLIT_CHAR = '\n';
+const CSV_NEWLINE_SPLIT_CHAR = '\r\n';
 
 exports.csvToJS = function (csvContent) {
     let data = {
@@ -21,6 +21,8 @@ exports.csvToJS = function (csvContent) {
 };
 
 function extractRows(csvData) {
+    //transform input
+    csvData.replace("\r\n", "\n").replace("\r", "\n")
     return csvData.split(CSV_NEWLINE_SPLIT_CHAR);
 }
 
