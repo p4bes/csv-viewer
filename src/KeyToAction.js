@@ -1,8 +1,8 @@
 exports.keytoActionMap = {
-    "e": {"actionType": "NEXT", "actionText": "N(ext"},
-    "r": {"actionType": "PREV", "actionText": "P(revious page"},
-    "i": {"actionType": "FIRST", "actionText": "F(irst page"},
-    "a": {"actionType": "LAST", "actionText": "L(ast page"},
+    "n": {"actionType": "NEXT", "actionText": "N(ext"},
+    "p": {"actionType": "PREV", "actionText": "P(revious page"},
+    "f": {"actionType": "FIRST", "actionText": "F(irst page"},
+    "l": {"actionType": "LAST", "actionText": "L(ast page"},
     "x": {"actionType": "EXIT", "actionText": "E(xit"}
 };
 
