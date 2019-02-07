@@ -5,17 +5,20 @@ let actionCallback = null;
 const ACTION_SEPARATOR_STRING = ', ';
 
 exports.registerActionCallback = function (callback) {
-    if (callback && typeof callback === "function") {
+    if (callback && typeof callback === 'function') {
         actionCallback = callback;
     }
 };
 
-exports.print = function (csvData, actions) {
-    // TODO render json data instead of csv
-    console.log(csvData);
+exports.printTable = function (data, actions, offset, size) {
+    console.log();
+    printData(data, offset, size);
     renderActions(actions);
-    rl.setPrompt('> ');
-    rl.prompt();
+    setPrompt();
+};
+
+exports.printText = function (text) {
+    console.log(text);
 };
 
 
@@ -24,6 +27,16 @@ exports.close = function () {
     process.stdin.destroy();
 };
 
+// handle keypress events
+process.stdin.on('keypress', function (s, key) {
+    fireCallbackAction(key.name);
+});
+
+
+function setPrompt() {
+    rl.setPrompt('> ');
+    rl.prompt();
+}
 
 function renderActions(actions) {
     let actionsString = '';
@@ -44,7 +57,61 @@ function fireCallbackAction(key) {
     }
 }
 
-// handle keypress events
-process.stdin.on('keypress', function (s, key) {
-    fireCallbackAction(key.name);
-});
+function printData(data, offset, size) {
+    let pageDataRows = data.rows.slice(offset, (offset + size));
+    let columnSizes = calculateColumnSizes(pageDataRows, data.headerItems);
+    printDataRow(data.headerItems, columnSizes);
+    printDividerLine(columnSizes);
+    printTableContent(pageDataRows, columnSizes);
+}
+
+function calculateColumnSizes(rows, headerColumns) {
+    let columnSizes = [];
+    extractColumnSizes(headerColumns, columnSizes);
+    rows.forEach(function (row) {
+        extractColumnSizes(row.columns, columnSizes);
+    });
+    return columnSizes;
+}
+
+function extractColumnSizes(columns, columnSizes) {
+    columns.forEach(function (column, i) {
+        if (!columnSizes[i] || (columnSizes[i] && columnSizes[i] < column.length)) {
+            columnSizes[i] = column.length;
+        }
+    });
+}
+
+function printDataRow(rowItems, columnSizes) {
+    let rowString = '';
+    rowItems.forEach(function (item, i) {
+        rowString += item;
+        if (item.length < columnSizes[i]) {
+            rowString = addCharactersToString(' ', columnSizes[i] - item.length, rowString);
+        }
+        rowString += '|';
+    });
+    console.log(rowString);
+}
+
+function printTableContent(dataRows, columnSizes) {
+    dataRows.forEach(function (row) {
+        printDataRow(row.columns, columnSizes);
+    });
+}
+
+function printDividerLine(columnSizes) {
+    let dividerString = '';
+    columnSizes.forEach(function (column) {
+        dividerString = addCharactersToString('-', column, dividerString);
+        dividerString += '+';
+    });
+    console.log(dividerString);
+}
+
+function addCharactersToString(character, number, textString) {
+    for (let i = 0; i < number; i++) {
+        textString += character;
+    }
+    return textString;
+}

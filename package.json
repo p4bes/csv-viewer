@@ -4,7 +4,8 @@
   "description": "ccd school csv viewer",
   "main": "index.js",
   "scripts": {
-    "start": "node $NODE_DEBUG_OPTION index.js",
+    "start": "node index.js",
+    "debug": "node $NODE_DEBUG_OPTION index.js",
     "csvviewer": "npm run start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,5 +15,8 @@
     "ccd"
   ],
   "author": "Johannes Tischer, Pablo Thomas",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "chai": "^4.2.0"
+  }
 }
