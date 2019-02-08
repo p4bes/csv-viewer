@@ -1,14 +1,14 @@
 class Pagination {
-    constructor(offset, size, totalElements, originalSize) {
+    constructor(offset, size, totalElements, pageSize) {
         this.offset = offset;
         this.size = size;
         this.totalElements = totalElements;
-        this.originalSize = originalSize;
+        this.pageSize = pageSize;
     }
 
     prev() {
         if (this.hasPrev()) {
-            this.size = this.originalSize;
+            this.size = this.pageSize;
             this.offset -= this.size;
         }
     };
@@ -16,7 +16,7 @@ class Pagination {
     next() {
         if (this.hasNext()) {
             this.offset += this.size;
-            this.size = this.originalSize;
+            this.size = this.pageSize;
         }
         if (this.hasRest()) {
             this.size -= (this.offset + this.size) - this.totalElements;
@@ -25,7 +25,7 @@ class Pagination {
 
     first() {
         this.offset = 0;
-        this.size = this.originalSize;
+        this.size = this.pageSize;
     }
 
     last() {
@@ -33,14 +33,14 @@ class Pagination {
             if (this.totalElements % this.size === 0) {
                 this.offset = this.totalElements-this.size;
             } else {
-                this.offset = Math.floor(this.totalElements / this.size) * this.originalSize;
-                this.size -= (this.offset + this.originalSize) - this.totalElements;
+                this.offset = Math.floor(this.totalElements / this.size) * this.pageSize;
+                this.size -= (this.offset + this.pageSize) - this.totalElements;
             }
         }
     }
 
     hasPrev() {
-        return this.offset - this.originalSize >= 0;
+        return this.offset - this.pageSize >= 0;
     }
 
     hasNext() {

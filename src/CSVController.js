@@ -20,7 +20,7 @@ exports.startConsole = function (dontCloseForTest) {
 function _start(filePath, pageSize, dontCloseForTest) {
     let offset = 0;
     let size = pageSize | 10;
-    let originalSize = size;
+    let originalPageSize = size;
     let data;
     let csvContent;
 
@@ -52,7 +52,7 @@ function _start(filePath, pageSize, dontCloseForTest) {
         // 4. wait for interactions
         consoleUI.registerActionCallback(function (key) {
             // handle action
-            actionController.handleAction(key, KEY_TO_ACTION.keytoActionMap, size, originalSize, offset, data.count, function (action, newOffset, newSize) {
+            actionController.handleAction(key, KEY_TO_ACTION.keytoActionMap, size, originalPageSize, offset, data.count, function (action, newOffset, newSize) {
                 if (offset !== newOffset || size !== newSize) {
                     // reprint with updated offset and size
                     offset = newOffset;

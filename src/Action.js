@@ -1,10 +1,10 @@
 const Pagination = require('./Pagination');
 
-exports.handleAction = function (key, keytoActionMap, size, originalSize, offset, totalElements, updateCallback) {
+exports.handleAction = function (key, keytoActionMap, size, pageSize, offset, totalElements, updateCallback) {
     key.toLowerCase();
     if (keytoActionMap.hasOwnProperty(key)) {
         const action = keytoActionMap[key];
-        let pagination = new Pagination(offset, size, totalElements, originalSize);
+        let pagination = new Pagination(offset, size, totalElements, pageSize);
         switch (action.actionType) {
             case 'NEXT':
                 pagination.next();
