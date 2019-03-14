@@ -10,9 +10,9 @@ exports.registerActionCallback = function (callback) {
     }
 };
 
-exports.printTable = function (data, actions, offset, size) {
+exports.printTable = function (data, actions, pagination) {
     console.log();
-    printData(data, offset, size);
+    printData(data, pagination);
     renderActions(actions);
     setPrompt();
 };
@@ -57,12 +57,13 @@ function fireCallbackAction(key) {
     }
 }
 
-function printData(data, offset, size) {
-    let pageDataRows = data.rows.slice(offset, (offset + size));
+function printData(data, pagination) {
+    let pageDataRows = data.rows.slice(pagination.offset, (pagination.offset + pagination.size));
     let columnSizes = calculateColumnSizes(pageDataRows, data.headerItems);
     printDataRow(data.headerItems, columnSizes);
     printDividerLine(columnSizes);
     printTableContent(pageDataRows, columnSizes);
+    printPageInformation(pagination.pageNumber, pagination.totalElements);
 }
 
 function calculateColumnSizes(rows, headerColumns) {
@@ -76,7 +77,7 @@ function calculateColumnSizes(rows, headerColumns) {
 
 function extractColumnSizes(columns, columnSizes) {
     columns.forEach(function (column, i) {
-        if (!columnSizes[i] || (columnSizes[i] && columnSizes[i] < column.length)) {
+        if (column && !columnSizes[i] || (columnSizes[i] && columnSizes[i] < column.length)) {
             columnSizes[i] = column.length;
         }
     });
@@ -115,3 +116,10 @@ function addCharactersToString(character, number, textString) {
     }
     return textString;
 }
+
+function printPageInformation(pageNumber, totalElements) {
+    console.log("Page " + pageNumber + " of " + totalElements);
+}
+
+
+

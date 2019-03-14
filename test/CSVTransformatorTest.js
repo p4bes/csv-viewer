@@ -1,7 +1,7 @@
-var csvTranformator = require('../src/CSVTransformator');
+const csvTranformator = require('../src/CSVTransformator');
 const fileReader = require('../src/FileReader');
-var assert = require('chai').assert
-var dummyString = '{"count":2,"headerItems":["Name","Alter","Letzter Besuch","Ort"],"rows":[{"index":1,"columns":["Peter","69","01.08.2010 00:00:00","Köln"]}]}'
+const assert = require('chai').assert
+const dummyString = '{"count":2,"headerItems":["No.","Name","Alter","Letzter Besuch","Ort"],"rows":[{"index":1,"columns":["1","Peter","69","01.08.2010 00:00:00","Köln"]}]}'
 
 describe('csvToJS', function() {
     it('should read csv input, transform data, and create Json', function(){

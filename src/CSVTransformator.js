@@ -2,6 +2,9 @@ const CSV_COLUMN_SPLIT_CHARACTER = ';';
 const CSV_NEWLINE_SPLIT_CHAR = '\n';
 
 exports.csvToJS = function (csvContent) {
+    if (!csvContent) {
+        return;
+    }
     let data = {
         count: 0,
         headerItems: [],
@@ -10,8 +13,10 @@ exports.csvToJS = function (csvContent) {
     const rows = extractRows(csvContent);
     data.count = rows.length - 1;
     rows.forEach(function (row, index) {
-        const columns = extractColumns(row);
+        const indexColumn = [index.toString()];
+        let columns = buildColumns(row, indexColumn);
         if (index === 0) {
+            columns[index] = 'No.';
             data.headerItems = columns;
         } else if (columns && columns.length > 0) {
             data.rows.push({index, columns});
@@ -19,6 +24,15 @@ exports.csvToJS = function (csvContent) {
     });
     return data;
 };
+
+function buildColumns(row, indexColumn) {
+    const rowColumns = extractColumns(row);
+    let columns = null;
+    if (rowColumns) {
+        columns = indexColumn.concat(rowColumns);
+    }
+    return columns;
+}
 
 function extractRows(csvData) {
     csvData = harmonizeLinebreaks(csvData);

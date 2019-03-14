@@ -14,14 +14,12 @@
     "js",
     "ccd"
   ],
-  "author": "Johannes Tischer, Pablo Thomas",
+  "author": "Pablo Thomas",
   "license": "ISC",
   "devDependencies": {
     "chai": "^4.2.0",
+    "mocha": "^5.2.0",
     "mocha-sinon": "^2.1.0",
     "sinon": "^7.2.3"
-  },
-  "dependencies": {
-    "mocha": "^5.2.0"
   }
 }
