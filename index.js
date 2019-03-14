@@ -1,4 +1,4 @@
 #!/usr/bin/env node
-const csv = require('./src/CSVController');
+const csv = require('./src/CSVViewer');
 
-csv.startConsole();
+csv.startConsole(process.argv);

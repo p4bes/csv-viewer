@@ -1,6 +1,6 @@
-exports.getParamFromPosition = function (position) {
-    if (process && process.argv && process.argv[position]) {
-        return process.argv[position];
+exports.getParamFromPosition = function (params, position) {
+    if (params && params[position]) {
+        return params[position];
     }
     return null;
 };
