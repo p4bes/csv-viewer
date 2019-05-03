@@ -63,7 +63,7 @@ function printData(data, pagination) {
     printDataRow(data.headerItems, columnSizes);
     printDividerLine(columnSizes);
     printTableContent(pageDataRows, columnSizes);
-    printPageInformation(pagination.pageNumber, pagination.totalElements);
+    printPageInformation(pagination.pageNumber, pagination.totalPages);
 }
 
 function calculateColumnSizes(rows, headerColumns) {

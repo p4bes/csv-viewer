@@ -5,20 +5,18 @@ const ERRORS = require('./Errors');
 const controller = require('./CSVController');
 const Pagination = require('./Pagination');
 
-// only needed for running tests
-let DONT_CLOSE_FOR_TEST = true;
-
+let DONT_CLOSE_FOR_TEST = true; // only needed for test execution
 const DEFAULT_PAGE_SIZE = 10;
 
 exports.startConsole = function (params, dontCloseForTest) {
     const filePath = consoleProcess.getParamFromPosition(params, 2);
-    const pageSize = parseInt(consoleProcess.getParamFromPosition(3));
-    // DONT_CLOSE_FOR_TEST = dontCloseForTest;
+    const pageSize = parseInt(consoleProcess.getParamFromPosition(params, 3));
+    DONT_CLOSE_FOR_TEST = dontCloseForTest;
     _start(filePath, pageSize);
 };
 
 function _start(filePath, pageSize) {
-    let size = pageSize | DEFAULT_PAGE_SIZE;
+    let size = pageSize ? pageSize : DEFAULT_PAGE_SIZE;
     let csvContent = controller.readFile(filePath, errorCode => _handleError(errorCode));
     let data = controller.transformData(csvContent, errorCode => _handleError(errorCode));
     let pagination = new Pagination(0, size, size, data ? data.count : 0, 1);
@@ -44,7 +42,7 @@ function _exit() {
         consoleUI.close();
         consoleProcess.exit();
     } else {
-        // keep the application running, but stop executing for testing
+        // keep the application running, but stop executing - only needed for tests!
         return null;
     }
 }

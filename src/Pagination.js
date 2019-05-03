@@ -6,6 +6,7 @@ class Pagination {
         this.totalElements = totalElements;
         this.pageNumber = pageNumber;
         this.oldPageNumber = pageNumber;
+        this.totalPages = this._calculateNumbeOfPages();
     }
 
 
@@ -45,7 +46,7 @@ class Pagination {
                 this.size -= (this.offset + this.pageSize) - this.totalElements;
             }
             this.oldPageNumber = this.pageNumber;
-            this.pageNumber = this.totalElements / this.size;
+            this.pageNumber = this.totalPages;
         }
     }
 
@@ -62,13 +63,20 @@ class Pagination {
     }
 
     hasChanged() {
-        console.log(this.pageNumber + ' vs ' + this.oldPageNumber);
         return this.pageNumber !== this.oldPageNumber;
     }
 
     updatePage(newPageNumber) {
         this.oldPageNumber = this.pageNumber;
         this.pageNumber += newPageNumber;
+    }
+
+    _calculateNumbeOfPages() {
+        let roundedNumber = Math.floor(this.totalElements / this.pageSize);
+        if (roundedNumber < (this.totalElements / this.pageSize)) {
+            roundedNumber++;
+        }
+        return roundedNumber;
     }
 }
 
