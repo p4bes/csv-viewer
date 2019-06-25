@@ -1,12 +1,12 @@
 const readline = require('readline'),
     rl = readline.createInterface(process.stdin, process.stdout);
 
-let actionCallback = null;
+let callbacks = {};
 const ACTION_SEPARATOR_STRING = ', ';
 
-exports.registerActionCallback = function (callback) {
-    if (callback && typeof callback === 'function') {
-        actionCallback = callback;
+var registerCallback = exports.registerCallback = function (callbackName, callbackFunction) {
+    if (callbackName && callbackFunction && typeof callbackFunction === 'function') {
+        callbacks[callbackName] = callbackFunction;
     }
 };
 
@@ -21,6 +21,20 @@ exports.printText = function (text) {
     console.log(text);
 };
 
+exports.startPageNumberDialog = function (pageNumberTypedCallback) {
+    registerCallback('pageNumberTyped', pageNumberTypedCallback);
+    console.log('Page Number: ');
+    readline.clearLine(process.stdout, 0);
+    readline.cursorTo(process.stdout, 0);
+    rl.on('line', (input) => {
+        let number = input.substr(input.length-1,1);
+        console.log(number);
+
+        if (isFinite(number)) {
+            fireCallback('pageNumberTyped', number);
+        }
+    });
+};
 
 exports.close = function () {
     rl.close();
@@ -29,7 +43,7 @@ exports.close = function () {
 
 // handle keypress events
 process.stdin.on('keypress', function (s, key) {
-    fireCallbackAction(key.name);
+    fireCallback('action', key.name);
 });
 
 
@@ -51,9 +65,9 @@ function renderActions(actions) {
     console.log(actionsString);
 }
 
-function fireCallbackAction(key) {
-    if (actionCallback != null) {
-        actionCallback(key);
+function fireCallback(callbackName, callbackValue) {
+    if (callbacks[callbackName] != null) {
+        callbacks[callbackName](callbackValue);
     }
 }
 

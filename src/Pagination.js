@@ -6,7 +6,7 @@ class Pagination {
         this.totalElements = totalElements;
         this.pageNumber = pageNumber;
         this.oldPageNumber = pageNumber;
-        this.totalPages = this._calculateNumbeOfPages();
+        this.totalPages = this._calculateNumberOfPages();
     }
 
 
@@ -50,6 +50,19 @@ class Pagination {
         }
     }
 
+    jumpToPage(pageNumber) {
+        if (pageNumber > 0 && pageNumber <= this.totalPages) {
+            if (pageNumber == 1) {
+                this.first();
+            } else if (pageNumber == this.totalPages) {
+                this.last();
+            } else {
+                this.offset = (pageNumber * this.size)-this.size;
+                this.setPage(pageNumber);
+            }
+        }
+    }
+
     hasPrev() {
         return this.offset - this.pageSize >= 0;
     }
@@ -59,7 +72,7 @@ class Pagination {
     }
 
     hasRest() {
-        return this.size < this.totalElements && this.offset + this.size >= this.totalElements;
+        return this.size < this.totalElements && this.offset + this.size > this.totalElements;
     }
 
     hasChanged() {
@@ -71,7 +84,12 @@ class Pagination {
         this.pageNumber += newPageNumber;
     }
 
-    _calculateNumbeOfPages() {
+    setPage(newPageNumber) {
+        this.oldPageNumber = this.pageNumber;
+        this.pageNumber = newPageNumber;
+    }
+
+    _calculateNumberOfPages() {
         let roundedNumber = Math.floor(this.totalElements / this.pageSize);
         if (roundedNumber < (this.totalElements / this.pageSize)) {
             roundedNumber++;

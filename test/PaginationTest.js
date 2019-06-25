@@ -89,9 +89,25 @@ describe('Pagination', function () {
             expect(paginationObj.offset).to.equal(0);
             expect(paginationObj.size).to.equal(10);
         });
-        it('should not go the first, because it is', function () {
+        it('should not go the first, because it is not existing', function () {
             let paginationObj = new Pagination(0, 10, 10, 31, 1);
             paginationObj.first();
+            expect(paginationObj.offset).to.equal(0);
+            expect(paginationObj.size).to.equal(10);
+            expect(paginationObj.pageSize).to.equal(10);
+        });
+    });
+
+    context('jump', function () {
+        it('should jump to the page number given', function () {
+            let paginationObj = new Pagination(0, 10, 10, 30, 1);
+            paginationObj.jumpToPage(2);
+            expect(paginationObj.offset).to.equal(10);
+            expect(paginationObj.size).to.equal(10);
+        });
+        it('should not jump to the page number given, because it is not existing', function () {
+            let paginationObj = new Pagination(0, 10, 10, 30, 1);
+            paginationObj.jumpToPage(5);
             expect(paginationObj.offset).to.equal(0);
             expect(paginationObj.size).to.equal(10);
             expect(paginationObj.pageSize).to.equal(10);

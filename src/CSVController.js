@@ -31,12 +31,17 @@ exports.printInitialData = function (data, pagination, consoleUI, errorCallback)
     }
 };
 
-exports.handleInteractions = function (key, data, pagination, reprintCallback, exitCallback) {
+exports.handleInteractions = function (key, data, pagination, reprintCallback, pageNumberCallback, exitCallback) {
     actionController.handleAction(key, KEY_TO_ACTION.keytoActionMap, pagination, function (action) {
-        if (action && action === 'EXIT') {
-            exitCallback();
-        } else if (pagination.hasChanged()) {
-            reprintCallback(data, KEY_TO_ACTION.keytoActionMap, pagination);
+            if (action && action === 'EXIT') {
+                exitCallback();
+            } else if (action && action === 'JUMP') {
+                pageNumberCallback();
+            } else if (pagination.hasChanged()) {
+                reprintCallback(data, KEY_TO_ACTION.keytoActionMap, pagination);
+            }
+
         }
-    });
+    );
+
 };

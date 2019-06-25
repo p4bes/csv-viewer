@@ -4,6 +4,7 @@ const consoleProcess = require('./ConsoleProcess');
 const ERRORS = require('./Errors');
 const controller = require('./CSVController');
 const Pagination = require('./Pagination');
+const KEY_TO_ACTION = require('./KeyToAction');
 
 let DONT_CLOSE_FOR_TEST = true; // only needed for test execution
 const DEFAULT_PAGE_SIZE = 10;
@@ -21,7 +22,8 @@ function _start(filePath, pageSize) {
     let data = controller.transformData(csvContent, errorCode => _handleError(errorCode));
     let pagination = new Pagination(0, size, size, data ? data.count : 0, 1);
     controller.printInitialData(data, pagination, consoleUI, errorCode => _handleError(errorCode));
-    consoleUI.registerActionCallback(pressedKey => _onKeyPressed(pressedKey, data, pagination));
+    consoleUI.registerCallback('action', pressedKey => _onKeyPressed(pressedKey, data, pagination));
+    consoleUI.registerCallback('pageNumberTyped', pageNumber => _onPageNumberTyped(pageNumber, data, pagination));
 }
 
 function _handleError(errorType) {
@@ -34,7 +36,11 @@ function _handleError(errorType) {
 }
 
 function _onKeyPressed(pressedKey, data, pagination) {
-    controller.handleInteractions(pressedKey, data, pagination, consoleUI.printTable, _exit);
+    controller.handleInteractions(pressedKey, data, pagination, consoleUI.printTable, consoleUI.startPageNumberDialog, _exit);
+}
+function _onPageNumberTyped(pageNumber, data, pagination) {
+    pagination.jumpToPage(pageNumber);
+    consoleUI.printTable(data,KEY_TO_ACTION.keytoActionMap, pagination);
 }
 
 function _exit() {
